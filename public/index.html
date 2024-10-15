@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalog Order Form</title>
     <link rel="stylesheet" href="css/styles.css"> <!-- Link to your CSS file -->
+    <script>
+        function addItemFields() {
+            const itemContainer = document.getElementById('itemContainer');
+            const newItemDiv = document.createElement('div');
+            newItemDiv.classList.add('item-field');
+            newItemDiv.innerHTML = `
+                <label for="itemNumber">Item Number:</label>
+                <input type="text" name="items[][itemNumber]" required>
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="items[][quantity]" required>
+            `;
+            itemContainer.appendChild(newItemDiv);
+        }
+    </script>
 </head>
 <body>
     <h1>Catalog Order Form</h1>
@@ -12,12 +26,16 @@
         <label for="customerName">Customer Name:</label>
         <input type="text" id="customerName" name="customerName" required><br><br>
 
-        <label for="itemNumber">Item Number:</label>
-        <input type="text" id="itemNumber" name="itemNumber" required><br><br>
+        <div id="itemContainer">
+            <div class="item-field">
+                <label for="itemNumber">Item Number:</label>
+                <input type="text" name="items[][itemNumber]" required>
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="items[][quantity]" required>
+            </div>
+        </div>
 
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" required><br><br>
-
+        <button type="button" onclick="addItemFields()">Add New Item</button><br><br>
         <button type="submit">Submit</button>
     </form>
 

@@ -1,3 +1,6 @@
+// server.js
+
+require('dotenv').config(); // Load environment variables
 const express = require('express');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
@@ -17,9 +20,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'roitblate@gmail.com',  // Your Gmail address
-        pass: 'yedk dvsr bqar vxem'  // Replace with your App Password
-    }
+        user: process.env.EMAIL_USER, // Use your environment variable
+        pass: process.env.EMAIL_PASS,   // Use your environment variable
+    },
 });
 
 // Route to serve the HTML form
@@ -29,13 +32,16 @@ app.get('/', (req, res) => {
 
 // POST endpoint to handle form submission
 app.post('/submit', (req, res) => {
-    const { customerName, itemNumber, quantity } = req.body;
+    const { customerName, items } = req.body; // Update to get items array
+
+    // Format items into a message
+    const itemDetails = items.map(item => `Item Number: ${item.itemNumber}, Quantity: ${item.quantity}`).join('\n');
 
     const mailOptions = {
-        from: 'roitblate@gmail.com', // Your email
-        to: 'mrpoppysny@gmail.com',    // Replace with your recipient email
+        from: process.env.EMAIL_USER,
+        to: 'mrpoppysny@gmail.com',
         subject: 'New Order Submission',
-        text: `Customer Name: ${customerName}\nItem Number: ${itemNumber}\nQuantity: ${quantity}`
+        text: `Customer Name: ${customerName}\n${itemDetails}`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
